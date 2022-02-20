@@ -30,7 +30,7 @@ BuildRequires:	gperf
 BuildRequires:	jq
 %if %{with perl}
 BuildRequires:	perl
-BuildRequires:  perl(Convert::Binary::C)
+#BuildRequires:  perl(Convert::Binary::C)
 BuildRequires:  perl(ExtUtils::Embed)
 %endif
 BuildRequires:	pkgconfig(libpcre2-8)
