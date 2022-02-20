@@ -4,7 +4,6 @@
 %define major 0
 %define devname %mklibname %{name} -d
 %define libname %mklibname %{name} %major
-
 %define pyname	python-%{name}
 %define plname	perl-%{name}
 
@@ -14,13 +13,13 @@
 %bcond_with tests
 
 Summary:	Free implementation of the DWG file format
-Name:		libredwg
+Name:		%{name}
 Version:	0.12.5
 Release:	1
 License:	GPLv3+
 Group:		Development/C
 URL:		https://savannah.gnu.org/projects/%{name}/
-# take the source package fro ghithub mirror because tar from GNU is incomplete
+# source package from GNU is incomplete, so for now use the github mirror
 #Source0:	https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
 Source0:	https://github.com/LibreDWG/libredwg/archive/refs/tags/%{version}/%{name}-%{version}.tar.gz
 
@@ -51,21 +50,6 @@ BuildRequires:	parallel
 BuildRequires:	python3dist(lxml)
 %endif
 
-
-#- shellcheck to check shell scripts
-#- rpmlint to check the spec validity
-#- jinq with some svg11 relaxng to check SVG validity.
-#  LaTeXML used to have a broken svg11-basic.rng. If so
-#  the zip from http://yupotan.sppd.ne.jp/relax-ng/svg11/ is correct.
-#  Needs to be installed into /usr/local/share/relaxng/svg11/
-#- mapbox/geojsonhint as geojson linter
-#  npm install -g @mapbox/geojsonhint
-#- geojson-validation as 2nd geojson fallback linter
-#  npm install -g geojson-validation
-#- valgrind to find leaks and memory bugs
-#- timeout to help tests with large or hanging DWG's
-#- picat to find unknown fields, a better prolog. http://picat-lang.org/
-
 %description
 LibreDWG is a free C library to read and write DWG files.  This program is
 part of the GNU project, released under the aegis of GNU.  It is licensed
@@ -86,76 +70,6 @@ wrote using LibreDWG is a reader, a writer, a rewriter (i.e. saveas),
 an initial SVG and Postscript conversion, dxf and json converters,
 dwggrep to search for text, and dwglayer to print the list of layers.
 More are in the pipeline.
-
-#---------------------------------------------------------------------------
-
-%if %{with doc}
-%package doc
-Summary:	Includes html documentation for gdcm
-BuildArch:	noarch
-
-%description doc
-LibreDWG is a free C library to read and write DWG files.  This program is
-part of the GNU project, released under the aegis of GNU.  It is licensed
-under the terms of the GNU General Public License version 3 (or at you option
-any later version).
-
-DWG is a file format created in the 70's for the emerging CAD applications.
-Currently it is the native file format of AutoCAD, a proprietary CAD program 
-developed by AutoDesk.
-
-LibreDWG is a fork from LibDWG due to its usage of Esperanto, which we
-think is not the best strategy for a free software project which aims
-to get lots of contributors.  LibreDWG is written in English.  At the
-moment our decoder (i.e. reader) is done, just some very advanced
-R2010+ and pre-R13 entities fail to read and are skipped over. The
-writer is good enough for R2000.  Among the example applications we
-wrote using LibreDWG is a reader, a writer, a rewriter (i.e. saveas),
-an initial SVG and Postscript conversion, dxf and json converters,
-dwggrep to search for text, and dwglayer to print the list of layers.
-More are in the pipeline.
-
-You should install the libredwg-doc package if you would like to
-access upstream documentation for libredwg.
-
-%files doc
-#{_datadir}/%{name}/doc/%{oname}.pdf
-%{_datadir}/%{name}/doc/html
-%endif
-
-#---------------------------------------------------------------------------
-
-%package applications
-Summary:	Includes command line programs for GDCM
-Requires:	%{libname} = %{EVRD}
-
-%description applications
-LibreDWG is a free C library to read and write DWG files.  This program is
-part of the GNU project, released under the aegis of GNU.  It is licensed
-under the terms of the GNU General Public License version 3 (or at you option
-any later version).
-
-DWG is a file format created in the 70's for the emerging CAD applications.
-Currently it is the native file format of AutoCAD, a proprietary CAD program 
-developed by AutoDesk.
-
-LibreDWG is a fork from LibDWG due to its usage of Esperanto, which we
-think is not the best strategy for a free software project which aims
-to get lots of contributors.  LibreDWG is written in English.  At the
-moment our decoder (i.e. reader) is done, just some very advanced
-R2010+ and pre-R13 entities fail to read and are skipped over. The
-writer is good enough for R2000.  Among the example applications we
-wrote using LibreDWG is a reader, a writer, a rewriter (i.e. saveas),
-an initial SVG and Postscript conversion, dxf and json converters,
-dwggrep to search for text, and dwglayer to print the list of layers.
-More are in the pipeline.
-
-You should install the gdcm-applications package if you would like to
-use command line programs part of GDCM. Includes reader, a writer, a
-re-writer (i.e. SaveAS), an initial basic SVG and Postscript
-conversion, experimental dxf and json converters, dwggrep to search
-for text, dwglayer to print the list of layers, and dwgfilter to use
-JQ expressions to query or change a DWG.
 
 %files applications
 %license COPYING
@@ -247,6 +161,22 @@ perl.
 %files -n %plname
 %{_libdir}/perl5/LibreDWG.pm
 %{perl_vendorarch}/auto/LibreDWG/LibreDWG.so
+%endif
+
+#---------------------------------------------------------------------------
+
+%if %{with doc}
+%package doc
+Summary:	Includes html documentation for %{oname}
+BuildArch:	noarch
+
+%description doc
+You should install the this package if you would like to access upstream
+documentation for %{oname}.
+
+%files doc
+#{_datadir}/%{name}/doc/%{oname}.pdf
+%{_datadir}/%{name}/doc/html
 %endif
 
 #---------------------------------------------------------------------------
