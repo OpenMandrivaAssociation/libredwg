@@ -71,7 +71,7 @@ an initial SVG and Postscript conversion, dxf and json converters,
 dwggrep to search for text, and dwglayer to print the list of layers.
 More are in the pipeline.
 
-%files applications
+%files
 %license COPYING
 %doc README AUTHORS NEWS
 %{_bindir}/*
@@ -107,7 +107,7 @@ an initial SVG and Postscript conversion, dxf and json converters,
 dwggrep to search for text, and dwglayer to print the list of layers.
 More are in the pipeline.
 
-%files -n %libname
+%files -n %{libname}
 %{_libdir}/%{name}.so.%{major}*
 
 #---------------------------------------------------------------------------
@@ -129,17 +129,17 @@ Libraries and headers required to develop software with %{oname}.
 #---------------------------------------------------------------------------
 
 %if %{with python}
-%package -n %pyname
+%package -n %{pyname}
 Summary:	Python binding for %{oname}
 %{?python_provide:%python_provide python-%{name}}
 %{?python_provide:%python_provide python3dist(%{name})}
 Requires:	%{libname} = %{EVRD}
 
-%description -n %pyname
+%description -n %{pyname}
 You should install this package if you would like to used this %{oname} with
 python.
 
-%files -n %pyname
+%files -n %{pyname}
 %{python_sitelib}/%{oname}.py
 %{python_sitelib}/__pycache__/%{oname}.*
 %{python_sitearch}/_%{oname}.so*
@@ -148,17 +148,17 @@ python.
 #---------------------------------------------------------------------------
 
 %if %{with perl}
-%package -n %plname
+%package -n %{plname}
 Summary:	Perl binding for %{oname}
 %{?perl_provide:%perl_provide perl-%{name}}
 
 Requires:	%{libname} = %{EVRD}
 
-%description -n %plname
+%description -n %{plname}
 You should install this package if you would like to used this %{oname} with
 perl.
 
-%files -n %plname
+%files -n %{plname}
 %{_libdir}/perl5/LibreDWG.pm
 %{perl_vendorarch}/auto/LibreDWG/LibreDWG.so
 %endif
