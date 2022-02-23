@@ -27,6 +27,7 @@ BuildRequires:	cmake
 BuildRequires:	ninja
 BuildRequires:	gperf
 BuildRequires:	jq
+BuildRequires:	jsmn-devel
 %if %{with perl}
 BuildRequires:	perl
 #BuildRequires:  perl(Convert::Binary::C)
