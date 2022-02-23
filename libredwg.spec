@@ -30,8 +30,8 @@ BuildRequires:	jq
 BuildRequires:	jsmn-devel
 %if %{with perl}
 BuildRequires:	perl
-#BuildRequires:  perl(Convert::Binary::C)
-BuildRequires:  perl(ExtUtils::Embed)
+#BuildRequires:	perl(Convert::Binary::C)
+BuildRequires:	perl(ExtUtils::Embed)
 %endif
 BuildRequires:	pkgconfig(libpcre2-8)
 BuildRequires:	pkgconfig(libpcre2-16)
