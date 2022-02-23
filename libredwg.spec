@@ -4,8 +4,8 @@
 %define major 0
 %define devname %mklibname %{name} -d
 %define libname %mklibname %{name} %major
-%define pyname python-%{name}
-%define plname perl-%{name}
+%define pyname	python-%{name}
+%define plname	perl-%{name}
 
 %bcond_without doc
 %bcond_without perl
@@ -22,8 +22,12 @@ URL:		https://savannah.gnu.org/projects/%{name}/
 # source package from GNU is incomplete, so for now use the github mirror
 #Source0:	https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
 Source0:	https://github.com/LibreDWG/libredwg/archive/refs/tags/%{version}/%{name}-%{version}.tar.gz
+
+BuildRequires:	cmake
+BuildRequires:	ninja
 BuildRequires:	gperf
 BuildRequires:	jq
+BuildRequires:	jsmn-devel
 %if %{with perl}
 BuildRequires:	perl
 #BuildRequires:	perl(Convert::Binary::C)
@@ -32,11 +36,11 @@ BuildRequires:	perl(ExtUtils::Embed)
 BuildRequires:	pkgconfig(libpcre2-8)
 BuildRequires:	pkgconfig(libpcre2-16)
 BuildRequires:	pkgconfig(libpcre2-32)
-#BuildRequires:	pkgconfig(libps)
+BuildRequires:	pkgconfig(libps)
 BuildRequires:	pkgconfig(libwbxml2)
 BuildRequires:	swig
 %if %{with python}
-BuildRequires:	pkgconfig(python)
+BuildRequires:	pkgconfig(python3)
 %endif
 %if %{with doc}
 BuildRequires:	doxygen
@@ -72,9 +76,9 @@ More are in the pipeline.
 %license COPYING
 %doc README AUTHORS NEWS
 %{_bindir}/*
-%doc %{_mandir}/man1/*.1.*
-%doc %{_mandir}/man5/dwg*
-%doc %{_infodir}/LibreDWG.info*
+%{_mandir}/man1/*.1.*
+%{_mandir}/man5/dwg*
+%{_infodir}/LibreDWG.info*
 %{_datadir}/%{name}/examples/*
 
 #---------------------------------------------------------------------------
@@ -148,6 +152,7 @@ python.
 %package -n %{plname}
 Summary:	Perl binding for %{oname}
 %{?perl_provide:%perl_provide perl-%{name}}
+
 Requires:	%{libname} = %{EVRD}
 
 %description -n %{plname}
@@ -178,7 +183,7 @@ documentation for %{oname}.
 #---------------------------------------------------------------------------
 
 %prep
-%autosetup -p1
+%autosetup
 
 # fix version
 sed -i -e "s|m4_esyscmd(\[build-aux/git-version-gen .tarball-version\])|[%{version}]|" configure.ac
@@ -205,7 +210,7 @@ find %{buildroot} -name '*.la' -delete
 install -dm 0755 %{buildroot}%{_datadir}/%{name}/examples
 for e in dwgadd.example load_dwg.py
 do
-    mv %{buildroot}%{_datadir}/$e %{buildroot}%{_datadir}/%{name}/examples
+	mv %{buildroot}%{_datadir}/$e %{buildroot}%{_datadir}/%{name}/examples
 done
 
 # fix perl module path
@@ -227,3 +232,4 @@ install -dm 0755 %{buildroot}%{_datadir}/%{name}/doc/html
 install -pm 0644 doc/%{oname}.html/* %{buildroot}%{_datadir}/%{name}/doc/html
 #install -pm 0644 doc/%{oname}.pdf %{buildroot}%{_datadir}/%{name}/doc
 %endif
+
