@@ -13,7 +13,7 @@
 %bcond_with tests
 
 Summary:	Free implementation of the DWG file format
-Name:		%{name}
+Name:		libredwg
 Version:	0.12.5
 Release:	2
 License:	GPLv3+
@@ -22,6 +22,10 @@ URL:		https://savannah.gnu.org/projects/%{name}/
 # source package from GNU is incomplete, so for now use the github mirror
 #Source0:	https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
 Source0:	https://github.com/LibreDWG/libredwg/archive/refs/tags/%{version}/%{name}-%{version}.tar.gz
+# CVE-2023-25222
+# https://nvd.nist.gov/vuln/detail/CVE-2023-25222
+# https://github.com/LibreDWG/libredwg/issues/615
+Patch0:		libredwg-0.12.5-CVE-2023-25222.patch
 
 BuildRequires:	cmake
 BuildRequires:	ninja
@@ -183,7 +187,7 @@ documentation for %{oname}.
 #---------------------------------------------------------------------------
 
 %prep
-%autosetup
+%autosetup -p1
 
 # fix version
 sed -i -e "s|m4_esyscmd(\[build-aux/git-version-gen .tarball-version\])|[%{version}]|" configure.ac
