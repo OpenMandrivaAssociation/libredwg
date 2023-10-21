@@ -15,7 +15,7 @@
 Summary:	Free implementation of the DWG file format
 Name:		libredwg
 Version:	0.12.5
-Release:	3
+Release:	4
 License:	GPLv3+
 Group:		Development/C
 URL:		https://savannah.gnu.org/projects/%{name}/
@@ -25,7 +25,22 @@ Source0:	https://github.com/LibreDWG/libredwg/archive/refs/tags/%{version}/%{nam
 # CVE-2023-25222
 # https://nvd.nist.gov/vuln/detail/CVE-2023-25222
 # https://github.com/LibreDWG/libredwg/issues/615
-Patch0:		libredwg-0.12.5-CVE-2023-25222.patch
+Patch100:		libredwg-0.12.5-CVE-2023-25222.patch
+# CVE-2023-36271
+# CVE-2023-36272
+# https://github.com/LibreDWG/libredwg/issues/677
+#Patch200:	https://github.com/LibreDWG/libredwg/commit/6b22121098e77bc24c08eca08735866d47c9bd7d.patch
+#Patch201:	https://github.com/LibreDWG/libredwg/commit/f00d6d02f911f4dbd8239df6f8be93d983abbf2e.patch
+#Patch202:	https://github.com/LibreDWG/libredwg/commit/8651fa27dd2de731e706e2ba09f0d28e4e0dce33.patch
+#Patch203:	https://github.com/LibreDWG/libredwg/commit/e04b89578882bab6e5ca94bd70519b5f25c36d4b.patch
+#Patch204:	https://github.com/LibreDWG/libredwg/commit/ab46f058b9d5701362d1baa63bf46f7361a74255.patch
+#Patch205:	https://github.com/LibreDWG/libredwg/commit/5a4c9abde7a3eaac168c1651a2949598e87bedcb.patch
+#Patch206:	https://github.com/LibreDWG/libredwg/commit/e30686bed32c20915fb789cb49dcc09e7512a56f.patch
+# CVE-2023-36273
+# CVE-2023-36274
+# https://github.com/LibreDWG/libredwg/issues/681
+# https://github.com/LibreDWG/libredwg/commit/c1ed1d91e28a6ddc7a9b5479d4795d58fb6be0ca.patch
+Patch300:	libredwg-0.12.5-CVE-2023-36273-CVE-2023-36274.patch
 
 BuildRequires:	cmake
 BuildRequires:	ninja

@@ -1,0 +1,44 @@
+From f00d6d02f911f4dbd8239df6f8be93d983abbf2e Mon Sep 17 00:00:00 2001
+From: Reini Urban <rurban@cpan.org>
+Date: Thu, 30 Mar 2023 10:30:18 +0200
+Subject: [PATCH] outdxf: fix SAB fuzzing sign-confusion
+
+1.: use unsigned length
+2.: fix wrong size check for case 9, long len.
+
+Fixes GH #677
+---
+ src/out_dxf.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/out_dxf.c b/src/out_dxf.c
+index 205908b215..5367415572 100644
+--- a/src/out_dxf.c
++++ b/src/out_dxf.c
+@@ -2109,7 +2109,7 @@ dwg_convert_SAB_to_SAT1 (Dwg_Entity_3DSOLID *restrict _obj)
+           }
+         case 8: // short len
+           {
+-            int len = bit_read_RS (&src);
++            BITCODE_RS len = bit_read_RS (&src);
+             if (src.byte + len >= src.size)
+               {
+                 LOG_ERROR ("Invalid SAB");
+@@ -2129,7 +2129,7 @@ dwg_convert_SAB_to_SAT1 (Dwg_Entity_3DSOLID *restrict _obj)
+           }
+         case 9: // long len
+           {
+-            int len = bit_read_RL (&src);
++            BITCODE_RL len = bit_read_RL (&src);
+             if (src.byte + len >= src.size)
+               {
+                 LOG_ERROR ("Invalid SAB");
+@@ -2138,7 +2138,7 @@ dwg_convert_SAB_to_SAT1 (Dwg_Entity_3DSOLID *restrict _obj)
+                 _obj->encr_sat_data[0] = NULL;
+                 return 1;
+               }
+-            if (dest.byte + len + 1 >= dest.size)
++            if (dest.byte + len + 2 >= dest.size)
+               bit_chain_alloc (&dest);
+             if (l + len > 255)
+               {
