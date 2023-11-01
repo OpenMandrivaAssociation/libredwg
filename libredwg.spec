@@ -81,7 +81,7 @@ More are in the pipeline.
 %{_mandir}/man1/*.1.*
 %{_mandir}/man5/dwg*
 %{_infodir}/LibreDWG.info*
-%{_datadir}/%{name}/examples/*
+%{_datadir}/%{name}
 
 #---------------------------------------------------------------------------
 
@@ -206,13 +206,6 @@ make html #pdf
 %install
 %make_install
 
-# fix examples path
-install -dm 0755 %{buildroot}%{_datadir}/%{name}/examples
-for e in dwgadd.example load_dwg.py
-do
-	mv %{buildroot}%{_datadir}/$e %{buildroot}%{_datadir}/%{name}/examples
-done
-
 # fix perl module path
 %if %{with perl}
 # Remove perllocal.pod and packlist files.
@@ -232,4 +225,3 @@ install -dm 0755 %{buildroot}%{_datadir}/%{name}/doc/html
 install -pm 0644 doc/%{oname}.html/* %{buildroot}%{_datadir}/%{name}/doc/html
 #install -pm 0644 doc/%{oname}.pdf %{buildroot}%{_datadir}/%{name}/doc
 %endif
-
