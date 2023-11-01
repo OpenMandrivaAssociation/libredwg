@@ -29,6 +29,7 @@ BuildRequires:	ninja
 BuildRequires:	gperf
 BuildRequires:	jq
 BuildRequires:	jsmn-devel
+BuildRequires:	git-core
 %if %{with perl}
 BuildRequires:	perl
 #BuildRequires:	perl(Convert::Binary::C)
@@ -194,7 +195,8 @@ sed -i -e 's|"../jsmn/jsmn.h"|<jsmn.h>|' src/in_json.c
 
 %build
 #autoreconf -fiv
-%configure
+%configure \
+	--enable-write
 %make_build
 
 %if %{with doc}
@@ -203,9 +205,6 @@ make html #pdf
 
 %install
 %make_install
-
-# Remove static libraries
-find %{buildroot} -name '*.la' -delete
 
 # fix examples path
 install -dm 0755 %{buildroot}%{_datadir}/%{name}/examples
