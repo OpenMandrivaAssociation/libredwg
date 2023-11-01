@@ -1,0 +1,109 @@
+diff -up libredwg-0.12.5.6517/examples/dwgadd.c.omv~ libredwg-0.12.5.6517/examples/dwgadd.c
+--- libredwg-0.12.5.6517/examples/dwgadd.c.omv~	2023-11-01 16:47:53.891484108 +0100
++++ libredwg-0.12.5.6517/examples/dwgadd.c	2023-11-01 16:48:06.234617534 +0100
+@@ -1018,10 +1018,7 @@ dwg_add_dat (Dwg_Data **dwgp, Bit_Chain
+         {
+           if (mspace)
+             {
+-              // gcc -O2 ubsan bug
+-              GCC80_DIAG_IGNORE (-Wmaybe-uninitialized)
+               hdr = mspace->tio.object->tio.BLOCK_HEADER;
+-              GCC80_DIAG_RESTORE
+               hdr_s = "mspace";
+               LOG_TRACE ("mspace\n");
+             }
+@@ -1041,12 +1038,10 @@ dwg_add_dat (Dwg_Data **dwgp, Bit_Chain
+                      hdr_s, height, flags, prompt, pt1.x, pt1.y, pt1.z, tag,
+                      default_text);
+           CHK_MISSING_BLOCK_HEADER
+-          GCC80_DIAG_IGNORE (-Wmaybe-uninitialized)
+           ent = (lastent_t){ .u.attdef
+                              = dwg_add_ATTDEF (hdr, height, flags, prompt,
+                                                &pt1, tag, default_text),
+                              .type = DWG_TYPE_ATTDEF };
+-          GCC80_DIAG_RESTORE
+         }
+       else
+         // clang-format off
+@@ -1129,10 +1124,8 @@ dwg_add_dat (Dwg_Data **dwgp, Bit_Chain
+         LOG_TRACE ("add_TEXT %s %s (%f %f %f) %f\n", hdr_s, text, pt1.x, pt1.y,
+                    pt1.z, height);
+         CHK_MISSING_BLOCK_HEADER
+-        GCC80_DIAG_IGNORE (-Wmaybe-uninitialized)
+         ent = (lastent_t){ .u.text = dwg_add_TEXT (hdr, text, &pt1, height),
+                            .type = DWG_TYPE_TEXT };
+-        GCC80_DIAG_RESTORE
+       }
+       else
+           // clang-format off
+diff -up libredwg-0.12.5.6517/programs/dwg2SVG.c.omv~ libredwg-0.12.5.6517/programs/dwg2SVG.c
+--- libredwg-0.12.5.6517/programs/dwg2SVG.c.omv~	2023-11-01 16:46:34.396621477 +0100
++++ libredwg-0.12.5.6517/programs/dwg2SVG.c	2023-11-01 16:47:41.543350492 +0100
+@@ -27,6 +27,8 @@
+  *       PLINE: widths, bulges.
+  */
+ 
++#define _GNU_SOURCE 1 // for strcasestr
++#include <string.h>
+ #include "../src/config.h"
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -40,7 +42,7 @@
+ #    define __BSD_VISIBLE 1
+ #  endif
+ #endif
+-#define _GNU_SOURCE /* make musl expose strcasestr */
++//define _GNU_SOURCE /* make musl expose strcasestr */
+ #include <string.h>
+ #ifdef HAVE_UNISTD_H
+ #  include <unistd.h>
+diff -up libredwg-0.12.5.6517/src/common.h.omv~ libredwg-0.12.5.6517/src/common.h
+diff -up libredwg-0.12.5.6517/src/encode.c.omv~ libredwg-0.12.5.6517/src/encode.c
+--- libredwg-0.12.5.6517/src/encode.c.omv~	2023-11-01 16:34:02.057411771 +0100
++++ libredwg-0.12.5.6517/src/encode.c	2023-11-01 16:34:33.997737176 +0100
+@@ -3519,11 +3519,8 @@ dwg_encode (Dwg_Data *restrict dwg, Bit_
+       Bit_Chain hdat                                                          \
+           = { chain, 8L, 0L, 0, 0, R_INVALID, R_INVALID, NULL, 30 };          \
+       bit_H_to_dat (&hdat, &dwg->header_vars.NAM->handleref);                 \
+-      /* gcc 11 bug */                                                        \
+-      GCC80_DIAG_IGNORE (-Wstringop-overflow)                                 \
+       for (int k = 0; k < MAX ((int)_obj->handles[i].num_hdl, 8); k++)        \
+         _obj->handles[i].hdl[k] = hdat.chain[k];                              \
+-      GCC80_DIAG_RESTORE                                                      \
+     }
+ 
+       SET_HDL (0, HANDSEED);
+diff -up libredwg-0.12.5.6517/src/encode.h.omv~ libredwg-0.12.5.6517/src/encode.h
+diff -up libredwg-0.12.5.6517/src/in_dxf.c.omv~ libredwg-0.12.5.6517/src/in_dxf.c
+--- libredwg-0.12.5.6517/src/in_dxf.c.omv~	2023-11-01 16:39:04.855585345 +0100
++++ libredwg-0.12.5.6517/src/in_dxf.c	2023-11-01 16:39:17.104727516 +0100
+@@ -6201,13 +6201,9 @@ new_table_control (const char *restrict
+   else
+     {
+       const char _control[] = "_CONTROL";
+-      // -Wstringop-truncation bug:
+-      // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=88780
+-      GCC80_DIAG_IGNORE (-Wstringop-truncation)
+       strncpy (ctrlname, name, sizeof (ctrlname) - sizeof (_control) - 1);
+       ctrlname[sizeof (ctrlname) - sizeof (_control)] = '\0';
+       strncat (ctrlname, _control, sizeof (ctrlname) - 1);
+-      GCC80_DIAG_RESTORE
+     }
+   LOG_TRACE ("add %s\n", ctrlname);
+   dxfname = strdup (ctrlname);
+@@ -6283,15 +6279,10 @@ new_table_control (const char *restrict
+             ref = dwg_add_handleref (dwg, 3, pair->value.u, obj);
+             LOG_TRACE ("%s.handle = " FORMAT_H " [H %d]\n", ctrlname,
+                        ARGS_H (obj->handle), pair->code);
+-            // also set the matching HEADER.*_CONTROL_OBJECT
+-            // -Wstringop-truncation bug:
+-            // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=88780
+-            GCC80_DIAG_IGNORE (-Wstringop-truncation)
+             strncpy (ctrlobj, ctrlname,
+                      sizeof (ctrlobj) - sizeof (_object) - 1);
+             ctrlname[sizeof (ctrlobj) - sizeof (_object)] = '\0';
+             strncat (ctrlobj, _object, sizeof (ctrlobj) - 1);
+-            GCC80_DIAG_RESTORE
+             dwg_dynapi_header_set_value (dwg, ctrlobj, &ref, 0);
+             LOG_TRACE ("HEADER.%s = " FORMAT_REF " [H 0]\n", ctrlobj,
+                        ARGS_REF (ref));
