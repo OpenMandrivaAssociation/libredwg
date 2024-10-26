@@ -1,6 +1,6 @@
-diff -up libredwg-0.12.5.6517/examples/dwgadd.c.omv~ libredwg-0.12.5.6517/examples/dwgadd.c
---- libredwg-0.12.5.6517/examples/dwgadd.c.omv~	2023-11-01 16:47:53.891484108 +0100
-+++ libredwg-0.12.5.6517/examples/dwgadd.c	2023-11-01 16:48:06.234617534 +0100
+diff -up libredwg-0.13.3/examples/dwgadd.c.1~ libredwg-0.13.3/examples/dwgadd.c
+--- libredwg-0.13.3/examples/dwgadd.c.1~	2024-02-26 10:20:14.000000000 +0100
++++ libredwg-0.13.3/examples/dwgadd.c	2024-10-26 20:30:25.469362811 +0200
 @@ -1018,10 +1018,7 @@ dwg_add_dat (Dwg_Data **dwgp, Bit_Chain
          {
            if (mspace)
@@ -36,48 +36,23 @@ diff -up libredwg-0.12.5.6517/examples/dwgadd.c.omv~ libredwg-0.12.5.6517/exampl
        }
        else
            // clang-format off
-diff -up libredwg-0.12.5.6517/programs/dwg2SVG.c.omv~ libredwg-0.12.5.6517/programs/dwg2SVG.c
---- libredwg-0.12.5.6517/programs/dwg2SVG.c.omv~	2023-11-01 16:46:34.396621477 +0100
-+++ libredwg-0.12.5.6517/programs/dwg2SVG.c	2023-11-01 16:47:41.543350492 +0100
-@@ -27,6 +27,8 @@
+diff -up libredwg-0.13.3/programs/dwg2SVG.c.1~ libredwg-0.13.3/programs/dwg2SVG.c
+--- libredwg-0.13.3/programs/dwg2SVG.c.1~	2024-10-26 20:30:25.469362811 +0200
++++ libredwg-0.13.3/programs/dwg2SVG.c	2024-10-26 20:35:26.872849706 +0200
+@@ -27,7 +27,7 @@
   *       PLINE: widths, bulges.
   */
  
-+#define _GNU_SOURCE 1 // for strcasestr
-+#include <string.h>
+-#define _GNU_SOURCE /* make musl expose strcasestr */
++#define _GNU_SOURCE 1 /* make musl expose strcasestr */
  #include "../src/config.h"
  #include <stdio.h>
  #include <stdlib.h>
-@@ -40,7 +42,7 @@
- #    define __BSD_VISIBLE 1
- #  endif
- #endif
--#define _GNU_SOURCE /* make musl expose strcasestr */
-+//define _GNU_SOURCE /* make musl expose strcasestr */
- #include <string.h>
- #ifdef HAVE_UNISTD_H
- #  include <unistd.h>
-diff -up libredwg-0.12.5.6517/src/common.h.omv~ libredwg-0.12.5.6517/src/common.h
-diff -up libredwg-0.12.5.6517/src/encode.c.omv~ libredwg-0.12.5.6517/src/encode.c
---- libredwg-0.12.5.6517/src/encode.c.omv~	2023-11-01 16:34:02.057411771 +0100
-+++ libredwg-0.12.5.6517/src/encode.c	2023-11-01 16:34:33.997737176 +0100
-@@ -3519,11 +3519,8 @@ dwg_encode (Dwg_Data *restrict dwg, Bit_
-       Bit_Chain hdat                                                          \
-           = { chain, 8L, 0L, 0, 0, R_INVALID, R_INVALID, NULL, 30 };          \
-       bit_H_to_dat (&hdat, &dwg->header_vars.NAM->handleref);                 \
--      /* gcc 11 bug */                                                        \
--      GCC80_DIAG_IGNORE (-Wstringop-overflow)                                 \
-       for (int k = 0; k < MAX ((int)_obj->handles[i].num_hdl, 8); k++)        \
-         _obj->handles[i].hdl[k] = hdat.chain[k];                              \
--      GCC80_DIAG_RESTORE                                                      \
-     }
- 
-       SET_HDL (0, HANDSEED);
-diff -up libredwg-0.12.5.6517/src/encode.h.omv~ libredwg-0.12.5.6517/src/encode.h
-diff -up libredwg-0.12.5.6517/src/in_dxf.c.omv~ libredwg-0.12.5.6517/src/in_dxf.c
---- libredwg-0.12.5.6517/src/in_dxf.c.omv~	2023-11-01 16:39:04.855585345 +0100
-+++ libredwg-0.12.5.6517/src/in_dxf.c	2023-11-01 16:39:17.104727516 +0100
-@@ -6201,13 +6201,9 @@ new_table_control (const char *restrict
+diff -up libredwg-0.13.3/src/encode.c.1~ libredwg-0.13.3/src/encode.c
+diff -up libredwg-0.13.3/src/in_dxf.c.1~ libredwg-0.13.3/src/in_dxf.c
+--- libredwg-0.13.3/src/in_dxf.c.1~	2024-02-26 10:20:14.000000000 +0100
++++ libredwg-0.13.3/src/in_dxf.c	2024-10-26 20:30:25.469362811 +0200
+@@ -6414,13 +6414,9 @@ new_table_control (const char *restrict
    else
      {
        const char _control[] = "_CONTROL";
@@ -91,7 +66,7 @@ diff -up libredwg-0.12.5.6517/src/in_dxf.c.omv~ libredwg-0.12.5.6517/src/in_dxf.
      }
    LOG_TRACE ("add %s\n", ctrlname);
    dxfname = strdup (ctrlname);
-@@ -6283,15 +6279,10 @@ new_table_control (const char *restrict
+@@ -6498,15 +6494,10 @@ new_table_control (const char *restrict
              ref = dwg_add_handleref (dwg, 3, pair->value.u, obj);
              LOG_TRACE ("%s.handle = " FORMAT_H " [H %d]\n", ctrlname,
                         ARGS_H (obj->handle), pair->code);

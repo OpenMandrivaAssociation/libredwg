@@ -14,8 +14,8 @@
 
 Summary:	Free implementation of the DWG file format
 Name:		libredwg
-Version:	0.12.5.6517
-Release:	2
+Version:	0.13.3
+Release:	1
 License:	GPLv3+
 Group:		Development/C
 URL:		https://savannah.gnu.org/projects/%{name}/
