@@ -24,6 +24,10 @@ URL:		https://savannah.gnu.org/projects/%{name}/
 Source0:	https://github.com/LibreDWG/libredwg/archive/refs/tags/%{version}/%{name}-%{version}.tar.gz
 Patch0:		libredwg-0.12.5.6517-clang.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
 BuildRequires:	cmake
 BuildRequires:	ninja
 BuildRequires:	gperf
