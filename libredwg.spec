@@ -3,7 +3,7 @@
 
 %define major 0
 %define devname %mklibname %{name} -d
-%define libname %mklibname %{name} %major
+%define libname %mklibname %{name} %{major}
 %define pyname	python-%{name}
 %define plname	perl-%{name}
 
@@ -15,13 +15,14 @@
 Summary:	Free implementation of the DWG file format
 Name:		libredwg
 Version:	0.13.3
-Release:	5
+Release:	6
 License:	GPLv3+
 Group:		Development/C
 URL:		https://savannah.gnu.org/projects/%{name}/
 # source package from GNU is incomplete, so for now use the github mirror
 #Source0:	https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
 Source0:	https://github.com/LibreDWG/libredwg/archive/refs/tags/%{version}/%{name}-%{version}.tar.gz
+Source1:	libredwg.rpmlintrc
 Patch0:		libredwg-0.12.5.6517-clang.patch
 
 BuildRequires:	autoconf
