@@ -1,0 +1,6 @@
+addFilter("lib-package-without-%mklibname")
+addFilter("invalid-license")
+addFilter("macro-in-comment")
+addFilter("no-%check-section")
+addFilter("shared-dir-glob-in-files")
+addFilter("non-coherent-filename")
