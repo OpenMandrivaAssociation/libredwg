@@ -15,12 +15,12 @@
 Summary:	Free implementation of the DWG file format
 Name:		libredwg
 Version:	0.13.3
-Release:	7
+Release:	8
 License:	GPLv3+
 Group:		Development/C
 URL:		https://savannah.gnu.org/projects/%{name}/
 # source package from GNU is incomplete, so for now use the github mirror
-#Source0:	https://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
+#Source0:	https://ftp.gnu.org/gnu/libredwg/libredwg-VERSION.tar.xz
 Source0:	https://github.com/LibreDWG/libredwg/archive/refs/tags/%{version}/%{name}-%{version}.tar.gz
 Source1:	libredwg.rpmlintrc
 Patch0:		libredwg-0.12.5.6517-clang.patch
@@ -184,7 +184,7 @@ You should install the this package if you would like to access upstream
 documentation for %{oname}.
 
 %files doc
-#{_datadir}/%{name}/doc/%{oname}.pdf
+#{_datadir}/libredwg/doc/LibreDWG.pdf
 %{_datadir}/%{name}/doc/html
 %endif
 
@@ -200,6 +200,9 @@ sed -i -e "s|m4_esyscmd(\[build-aux/git-version-gen .tarball-version\])|[%{versi
 
 %build
 #autoreconf -fiv
+# Upstream forces -Werror; clang fails on _POSIX_C_SOURCE redef vs glibc and -Walloc-size
+export CFLAGS="%{optflags} -Wno-error=macro-redefined -Wno-error=alloc-size"
+export CXXFLAGS="%{optflags} -Wno-error=macro-redefined -Wno-error=alloc-size"
 %configure \
 	--enable-write
 %make_build
