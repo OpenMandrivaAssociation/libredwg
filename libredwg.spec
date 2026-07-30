@@ -15,7 +15,7 @@
 Summary:	Free implementation of the DWG file format
 Name:		libredwg
 Version:	0.13.3
-Release:	6
+Release:	7
 License:	GPLv3+
 Group:		Development/C
 URL:		https://savannah.gnu.org/projects/%{name}/
@@ -27,13 +27,13 @@ Patch0:		libredwg-0.12.5.6517-clang.patch
 
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	libtool-base
 BuildRequires:	slibtool
 BuildRequires:	cmake
 BuildRequires:	ninja
 BuildRequires:	gperf
 BuildRequires:	jq
-BuildRequires:	jsmn-devel
+# jsmn-devel/lib64jsmn-devel not on all arches; use bundled
+#BuildRequires:	jsmn-devel
 BuildRequires:	git-core
 %if %{with perl}
 BuildRequires:	perl
@@ -43,7 +43,8 @@ BuildRequires:	perl(ExtUtils::Embed)
 BuildRequires:	pkgconfig(libpcre2-8)
 BuildRequires:	pkgconfig(libpcre2-16)
 BuildRequires:	pkgconfig(libpcre2-32)
-BuildRequires:	pkgconfig(libps)
+# pslib only on some arches
+#BuildRequires:	pkgconfig(libps)
 BuildRequires:	pkgconfig(libwbxml2)
 BuildRequires:	swig
 %if %{with python}
@@ -195,8 +196,7 @@ documentation for %{oname}.
 # fix version
 sed -i -e "s|m4_esyscmd(\[build-aux/git-version-gen .tarball-version\])|[%{version}]|" configure.ac
 
-# use system jsmn
-sed -i -e 's|"../jsmn/jsmn.h"|<jsmn.h>|' src/in_json.c
+# use bundled jsmn (system jsmn package not on all arches)
 
 %build
 #autoreconf -fiv
