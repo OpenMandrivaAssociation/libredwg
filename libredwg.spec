@@ -15,14 +15,16 @@
 Summary:	Free implementation of the DWG file format
 Name:		libredwg
 Version:	0.13.3
-Release:	8
+Release:	9
 License:	GPLv3+
 Group:		Development/C
 URL:		https://savannah.gnu.org/projects/%{name}/
 # source package from GNU is incomplete, so for now use the github mirror
 #Source0:	https://ftp.gnu.org/gnu/libredwg/libredwg-VERSION.tar.xz
 Source0:	https://github.com/LibreDWG/libredwg/archive/refs/tags/%{version}/%{name}-%{version}.tar.gz
-Source1:	libredwg.rpmlintrc
+# jsmn git submodule (github archive leaves jsmn/ empty)
+Source1:	https://github.com/zserge/jsmn/archive/85695f3d5903b1cd5b4030efe50db3b4f5f3c928/jsmn-85695f3.tar.gz
+Source2:	libredwg.rpmlintrc
 Patch0:		libredwg-0.12.5.6517-clang.patch
 
 BuildRequires:	autoconf
@@ -196,7 +198,11 @@ documentation for %{oname}.
 # fix version
 sed -i -e "s|m4_esyscmd(\[build-aux/git-version-gen .tarball-version\])|[%{version}]|" configure.ac
 
-# use bundled jsmn (system jsmn package not on all arches)
+# populate empty jsmn submodule from Source1
+rm -rf jsmn
+tar -xzf %{SOURCE1}
+mv jsmn-85695f3d5903b1cd5b4030efe50db3b4f5f3c928 jsmn
+test -f jsmn/jsmn.h
 
 %build
 #autoreconf -fiv
